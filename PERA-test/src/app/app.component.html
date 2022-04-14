@@ -1,0 +1,81 @@
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="card-container">
+    <button class="card card-small" (click)="sort_id()" tabindex="0">
+      <span>Id</span>
+    </button>
+
+    <button class="card card-small" (click)="sort_title()" tabindex="0">
+      <span>Title</span>
+    </button>
+
+    <button class="card card-small" (click)="sort_artist()" tabindex="0">
+      <span>Artist</span>
+    </button>
+
+    <button class="card card-small" (click)="sort_date()" tabindex="0">
+      <span>Release Date</span>
+    </button>
+
+    <button class="card card-small" (click)="sort_price()" tabindex="0">
+      <span>Price</span>
+    </button>
+  </div>
+</div>
+
+<!-- Next Steps -->
+  <div>
+  <h1>Records</h1>
+  <p>Here are the current songs in your playlist:</p>
+
+  <input type="hidden" #selection>
+
+  <table>
+      <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Title</th>
+        <th scope="col">Artist</th>
+        <th scope="col">Release Date</th>
+        <th scope="col">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let album of albums; let i = index" >
+        <td>{{ album.id }}</td>
+        <td>{{ album.title }}</td>
+        <td>{{ album.artist }}</td>
+        <td>{{ album.date }}</td>
+        <td>{{ album.price }}</td>
+        <td>
+          <button class="card card-delete" (click)="delete_id(album.id)" tabindex="0">
+            <span>Delete</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!--
+<div>
+  <form #signupForm="ngForm" (ngSubmit)="submit_new(signupForm)">
+    <fieldset>
+        <legend>New Entry</legend>
+        <label>ID<br />
+        <input type="text" name="id", id="id" ngModel /></label><br />
+        <label>Title<br />
+        <input type="text" name="title", id="title" ngModel /></label><br />
+        <label>artist<br />
+        <input type="text" name="artist", id="artist" ngModel /></label><br />
+        <label>date<br />
+        <input type="text" name="date", id="date" ngModel /></label><br />
+        <label>price<br />
+        <input type="text" name="price", id="price" ngModel /></label><br />
+        <button type="submit">Submit</button>
+    </fieldset>
+  </form>
+</div>
+-->
+<!-- Footer -->
+
+<router-outlet></router-outlet>
