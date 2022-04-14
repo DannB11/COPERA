@@ -1,7 +1,7 @@
 import { AbstractJsEmitterVisitor } from '@angular/compiler/src/output/abstract_js_emitter';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import Album from './album';
+import Album from './Album';
 
 @Component({
   selector: 'app-root',
@@ -48,7 +48,6 @@ export class AppComponent {
     },
   ]
 
-  
   sort_id() {
     this.albums.sort((a, b) => a.id.localeCompare(b.id))
   }
@@ -80,13 +79,16 @@ export class AppComponent {
   }
 
   submit_new(form: NgForm) {
-
+    var found: boolean = false;
     this.albums.forEach(album => {
       if(album.id == form.value.id){
         console.log("This ID already exists in your playlist");
-        return
+        found = true;
+        return;
       }
     })
-    this.albums.push(new Album(form.value.id, form.value.title, form.value.artist, form.value.date, form.value.price));
+    if(!found){
+      this.albums.push(new Album(form.value.id, form.value.title, form.value.artist, form.value.date, form.value.price));
+    }
   }
 }

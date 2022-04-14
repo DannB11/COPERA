@@ -24,10 +24,10 @@
 </div>
 
 <!-- Next Steps -->
-  <div>
+<div>
   <h1>Records</h1>
   <p>Here are the current songs in your playlist:</p>
-
+  
   <input type="hidden" #selection>
 
   <table>
@@ -55,27 +55,26 @@
       </tr>
     </tbody>
   </table>
-</div>
-<!--
-<div>
-  <form #signupForm="ngForm" (ngSubmit)="submit_new(signupForm)">
+
+  <form #FormName = "ngForm" (ngSubmit)="submit_new(FormName)"> 
     <fieldset>
         <legend>New Entry</legend>
         <label>ID<br />
-        <input type="text" name="id", id="id" ngModel /></label><br />
+        <input type="text" name="id" id="id" ngModel /></label><br />
         <label>Title<br />
-        <input type="text" name="title", id="title" ngModel /></label><br />
+        <input type="text" name="title" id="title" ngModel /></label><br />
         <label>artist<br />
-        <input type="text" name="artist", id="artist" ngModel /></label><br />
+        <input type="text" name="artist" id="artist" ngModel /></label><br />
         <label>date<br />
-        <input type="text" name="date", id="date" ngModel /></label><br />
+        <input type="text" name="date" id="date" ngModel /></label><br />
         <label>price<br />
-        <input type="text" name="price", id="price" ngModel /></label><br />
+        <input type="text" name="price" id="price" ngModel /></label><br />
         <button type="submit">Submit</button>
     </fieldset>
   </form>
+
 </div>
--->
+
 <!-- Footer -->
 
 <router-outlet></router-outlet>
