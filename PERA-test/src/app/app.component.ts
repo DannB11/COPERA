@@ -20,6 +20,7 @@ export class AppComponent {
   title = 'PERA-test';
   sort_by: string = "ID"
   new_hidden: boolean = true;
+  delete_modal_lock: boolean = false;
   sortOptions: string[] = [ 
     "ID",
     "Title",
@@ -229,22 +230,27 @@ export class AppComponent {
   }
   
   openConfirmDelete(): void {
-    if(this.checked.length > 0){
-      const dialogRef = this.dialog.open(ModalComponent);
+    if (this.delete_modal_lock == false) {
+      this.delete_modal_lock = true;
+      if(this.checked.length > 0){
+        const dialogRef = this.dialog.open(ModalComponent);
 
-      dialogRef.afterClosed().subscribe(result => {
-        if(result == true){
-          this.checked.forEach((item: string) => {
-            if(item != null){
-              var id: number = +item;
-              this.delete_id(id);
-            }
-          });
-          this.delete_form.reset();
-          this.all_selected = false;
-        }
-      });
-    }
+        dialogRef.afterClosed().subscribe(result => {
+          if(result == true){
+            this.checked.forEach((item: string) => {
+              if(item != null){
+                var id: number = +item;
+                this.delete_id(id);
+              }
+            });
+            this.delete_form.reset();
+            this.all_selected = false;
+          }
+          this.delete_modal_lock = false;
+        });
+      }
+      
+    }  
   }
 
   is_checked(x: number){
@@ -380,7 +386,6 @@ export class AppComponent {
   }
 
   submit_new(form: NgForm) {
-    this.delete_form.reset();
     var found: boolean = false;
     this.albums.forEach(album => {
       if(album.id == form.value.id){
@@ -394,9 +399,10 @@ export class AppComponent {
     if(!found){
       //Verify all fields are filled
       if(form.value.id != "" && form.value.title != "" && form.value.artist != "" && form.value.date != "" && form.value.price != ""){
-        console.log(form.value.date);
+        this.all_selected = false;
         this.albums.push(new Album(Math.abs(form.value.id), form.value.title, form.value.artist, new Date(form.value.date), Math.abs(form.value.price)));
         this.total = this.albums.length
+        form.resetForm();
       }
     }  
   }

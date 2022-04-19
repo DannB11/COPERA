@@ -70,19 +70,6 @@
             </tbody>
           </table>
         </form>
-        <div class="delete_button">
-          <button (click)="openConfirmDelete()" tabindex="0">
-            <span>Delete</span>
-          </button>
-        </div> 
-        <div class="new_button">
-          <button class="new_entry" (click)="show_new_form()" tabindex="0" [hidden]="!new_hidden">
-            <span>New Entry</span>
-          </button>
-          <button class="new_entry" (click)="hide_new_form()" tabindex="0" [hidden]="new_hidden">
-            <span>Hide New Entry</span>
-          </button>
-        </div> 
         <div class="pageBox">
           <div class="pageButtonBox">
             <button class="scroll" (click)="scroll_down()" tabindex="0" [disabled]="!has_less()">
@@ -96,6 +83,22 @@
             <p>Displaying {{start+1}}-{{get_true_end()}} of {{total}} entries</p>
           </div>
         </div>
+        <div class="pageBoxR">
+          <div class="entryAddDelBox">
+            <button class="new_entry" (click)="show_new_form()" tabindex="0" [hidden]="!new_hidden">
+              <span>New Entry</span>
+            </button>
+            <button class="new_entry" (click)="hide_new_form()" tabindex="0" [hidden]="new_hidden">
+              <span>Hide New Entry</span>
+            </button>
+            
+            <button (click)="openConfirmDelete()" tabindex="0">
+              <span>Delete</span>
+            </button>
+          </div>
+          <br />
+        </div> 
+  
         
         
         <form #FormName = "ngForm" (ngSubmit)="submit_new(FormName)" [hidden]="new_hidden"> 

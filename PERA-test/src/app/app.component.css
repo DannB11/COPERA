@@ -67,13 +67,32 @@ p {
   padding: auto;
   margin-left: 0;
   margin-right: auto;
+  float: left;
+}
+
+.pageBoxR{
+  width: min-content;
+  padding: auto;
+  margin-left: auto;
+  margin-right: 0;
+  float: right;
 }
 
 .pageButtonBox{
   width: max-content;
   position: static;
-  margin: 0 auto;
+  margin-right: 0;
 }
+
+.entryAddDelBox{
+  width: max-content;
+  position: static;
+  margin: 0 auto;
+  margin-left: auto;
+  margin-right: 0;
+
+}
+
 
 .fafax{
   color: red;
@@ -99,10 +118,11 @@ p {
 }
 
 .frame {
-  width: 450px;
+  width: 420px;
   border: 15px solid #84BF41;
   padding: auto;
   margin: auto;
+  overflow: auto;
 }
 
 .songTable {

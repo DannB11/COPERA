@@ -11,7 +11,8 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 export class ModalComponent {
     closeResult = '';
   
-    constructor(public modalService: NgbModal) {}
+    constructor(public modalService: NgbModal) {
+    }
   
     open(content: any) {
       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
@@ -20,7 +21,7 @@ export class ModalComponent {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       });
     }
-    
+
     private getDismissReason(reason: any): string {
       if (reason === ModalDismissReasons.ESC) {
         return 'by pressing ESC';
