@@ -1,80 +1,123 @@
-<!-- Toolbar -->
-<div class="toolbar">
-  <div class="card-container">
-    <button class="card card-small" (click)="sort_id()" tabindex="0">
-      <span>Id</span>
-    </button>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Song Playlist</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  </head>
 
-    <button class="card card-small" (click)="sort_title()" tabindex="0">
-      <span>Title</span>
-    </button>
+  <body>
+    <div class="frame">
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <h1>Song Records</h1>
+        </div>
+        <div class="toolbar-right">
+          <div class="toolbar-card">
+            Sort By:
+            <select class='select-option' [(ngModel)]="sort_by" (change)='onOptionsSelected($event)' >
+              <option class='string' *ngFor='let option of sortOptions' [value]="option">{{option}}</option>
+            </select>
+            <br/>
+          </div>
+          <div class="toolbar-card">
+            Items per page:
+            <select class='select-option' [(ngModel)]="max_per_page" (change)='onSizeSelected($event)' >
+              <option class='string' *ngFor='let size of sizeOptions' [value]="size">{{size}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
 
-    <button class="card card-small" (click)="sort_artist()" tabindex="0">
-      <span>Artist</span>
-    </button>
-
-    <button class="card card-small" (click)="sort_date()" tabindex="0">
-      <span>Release Date</span>
-    </button>
-
-    <button class="card card-small" (click)="sort_price()" tabindex="0">
-      <span>Price</span>
-    </button>
-  </div>
-</div>
-
-<!-- Next Steps -->
-<div>
-  <h1>Records</h1>
-  <p>Here are the current songs in your playlist:</p>
-  
-  <input type="hidden" #selection>
-
-  <table>
-      <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Title</th>
-        <th scope="col">Artist</th>
-        <th scope="col">Release Date</th>
-        <th scope="col">Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let album of albums; let i = index" >
-        <td>{{ album.id }}</td>
-        <td>{{ album.title }}</td>
-        <td>{{ album.artist }}</td>
-        <td>{{ album.date }}</td>
-        <td>{{ album.price }}</td>
-        <td>
-          <button class="card card-delete" (click)="delete_id(album.id)" tabindex="0">
+      <!-- List -->
+      <div>
+        
+        <input type="hidden" #selection>
+          <form [formGroup]="delete_form">
+          <table class="songTable">
+              <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Title</th>
+                <th scope="col">Artist</th>
+                <th scope="col">Release Date</th>
+                <th scope="col">Price</th>
+                <th scope="col">Remove</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let album of albums | slice:start:end; let i = index" >
+                  <td class="songTableTD first-child">{{ album.id }}</td>
+                  <td class="songTableTD">{{ album.title }}</td>
+                  <td class="songTableTD">{{ album.artist }}</td>
+                  <td class="songTableTD">{{ album.date | date}}</td>
+                  <td class="songTableTD">${{ album.price }}</td>
+                  <td class="songTableTD">
+                    <input type="checkbox"  [name]="album.id" [value]="album.id" (change)="onCheckboxChange($event)" [checked]="is_checked(album.id)"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td ></td>
+                  <td ></td>
+                  <td ></td>
+                  <td ></td>
+                  <td >
+                    <input type="checkbox"  name="all" value="all" (change)="select_all()" [checked]="all_selected"/>
+                  </td>
+                </tr>
+            </tbody>
+          </table>
+        </form>
+        <div class="delete_button">
+          <button (click)="openConfirmDelete()" tabindex="0">
             <span>Delete</span>
           </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <form #FormName = "ngForm" (ngSubmit)="submit_new(FormName)"> 
-    <fieldset>
-        <legend>New Entry</legend>
-        <label>ID<br />
-        <input type="text" name="id" id="id" ngModel /></label><br />
-        <label>Title<br />
-        <input type="text" name="title" id="title" ngModel /></label><br />
-        <label>artist<br />
-        <input type="text" name="artist" id="artist" ngModel /></label><br />
-        <label>date<br />
-        <input type="text" name="date" id="date" ngModel /></label><br />
-        <label>price<br />
-        <input type="text" name="price" id="price" ngModel /></label><br />
-        <button type="submit">Submit</button>
-    </fieldset>
-  </form>
-
-</div>
-
+        </div> 
+        <div class="new_button">
+          <button class="new_entry" (click)="show_new_form()" tabindex="0" [hidden]="!new_hidden">
+            <span>New Entry</span>
+          </button>
+          <button class="new_entry" (click)="hide_new_form()" tabindex="0" [hidden]="new_hidden">
+            <span>Hide New Entry</span>
+          </button>
+        </div> 
+        <div class="pageBox">
+          <div class="pageButtonBox">
+            <button class="scroll" (click)="scroll_down()" tabindex="0" [disabled]="!has_less()">
+              <span>Previous</span>
+            </button>
+            <button class="scroll" (click)="scroll_up()" tabindex="0" [disabled]="!has_more()">
+              <span>Next</span>
+            </button>
+          </div>
+          <div class="pageButtonBox">
+            <p>Displaying {{start+1}}-{{get_true_end()}} of {{total}} entries</p>
+          </div>
+        </div>
+        
+        
+        <form #FormName = "ngForm" (ngSubmit)="submit_new(FormName)" [hidden]="new_hidden"> 
+          <fieldset class="newEntry">
+              <legend>New Entry</legend>
+              <label>ID<br />
+              <input type="number" name="id" id="id" required = true ngModel/></label><br />
+              <label>Song Title<br />
+              <input type="text" name="title" id="title" ngModel/></label><br />
+              <label>Artist<br />
+              <input type="text" name="artist" id="artist" ngModel/></label><br />
+              <label>Release Date<br />
+              <input type="date" name="date" id="date" ngModel/></label><br />
+              <label>Price<br />
+              <input type="number" name="price" id="price" ngModel/></label><br />
+              <button type="submit">Submit</button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
 <!-- Footer -->
 
 <router-outlet></router-outlet>

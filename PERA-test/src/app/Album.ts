@@ -1,11 +1,11 @@
 export default class Album {
-    id!: string;
+    id!: number;
     title!: string;
     artist!: string;
-    date!: string;
-    price!: string;
+    date!: Date;
+    price!: number;
 
-    constructor(id: string, title: string, artist: string, date: string, price: string) { 
+    constructor(id: number, title: string, artist: string, date: Date, price: number) { 
         this.id = id;
         this.title = title;
         this.artist = artist;
