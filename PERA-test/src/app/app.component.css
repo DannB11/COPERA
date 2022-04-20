@@ -45,6 +45,7 @@ p {
   border-width: 0;
   padding: 0;
   margin: 0;
+  overflow: auto;
 }
 
 .toolbar-card{
@@ -118,13 +119,16 @@ p {
 }
 
 .frame {
-  width: 420px;
+  width: 450px;
   border: 15px solid #84BF41;
   padding: auto;
   margin: auto;
   overflow: auto;
 }
 
+.select-option {
+  text-size-adjust: 50%;
+}
 .songTable {
   border: none;
   border-collapse: collapse;

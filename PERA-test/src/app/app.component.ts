@@ -1,21 +1,22 @@
 import { identifierName } from '@angular/compiler';
 import { AbstractJsEmitterVisitor } from '@angular/compiler/src/output/abstract_js_emitter';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import Album from './Album';
-import { Inject } from '@angular/core';
+import { AlbumService } from './services/album.mock.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogData } from './DialogData';
-import { ModalComponent } from './modal/modal.component';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalComponent } from './modal/modal.component';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   closeDelete: string = "";
   title = 'PERA-test';
   sort_by: string = "ID"
@@ -25,8 +26,10 @@ export class AppComponent {
     "ID",
     "Title",
     "Artist",
-    "Date",
-    "Price"
+    "Date(New to Old)",
+    "Date(Old to New)",
+    "Price(Low to High)",
+    "Price(High to Low)"
   ]
   sizeOptions: string[] = [
     "10",
@@ -34,170 +37,29 @@ export class AppComponent {
     "50",
     "All"
   ]
-  albums: Album[] = [
-    {
-      id: 0,
-      title: 'Waterfalls',
-      artist: 'TLC',
-      date: new Date(1995, 8 ,15),
-      price: 1
-    },
-    {
-      id: 1,
-      title: 'Creep',
-      artist: 'TLC',
-      date:  new Date(1994, 31 , 10),
-      price: 1
-    },
-    {
-      id: 2,
-      title: 'Kiss from a Rose',
-      artist: 'Seal',
-      date: new Date(1994, 31 , 10),
-      price: 2
-    },
-    {
-      id: 3,
-      title: 'Always',
-      artist: 'Bon Jovi',
-      date: new Date(1994, 31 , 10),
-      price: 3
-    },
-    {
-      id: 4,
-      title: 'Run-Around',
-      artist: 'Blues Traveler',
-      date: new Date(1994, 31 , 10),
-      price: 1
-    },
-    {
-      id: 5,
-      title: 'Waterfalls',
-      artist: 'TLC',
-      date: new Date(1994, 31 , 10),
-      price: 1
-    },
-    {
-      id: 6,
-      title: 'Creep',
-      artist: 'TLC',
-      date: new Date(1994, 31 , 10),
-      price: 1
-    },
-    {
-      id: 7,
-      title: 'Kiss from a Rose',
-      artist: 'Seal',
-      date: new Date(1994, 31 , 10),
-      price: 2
-    },
-    {
-      id: 8,
-      title: 'Always',
-      artist: 'Bon Jovi',
-      date: new Date(1994, 31 , 10),
-      price: 3
-    },
-    {
-      id: 9,
-      title: 'Run-Around',
-      artist: 'Blues Traveler',
-      date: new Date(1994, 31 , 10),
-      price: 1
-    },
-    {
-      id: 10,
-      title: 'Waterfalls',
-      artist: 'TLC',
-      date: new Date(1994, 31 , 10),
-      price: 1
-    },
-    {
-      id: 11,
-      title: 'Creep',
-      artist: 'TLC',
-      date: new Date(1994, 31 , 10),
-      price: 1
-    },
-    {
-      id: 12,
-      title: 'Kiss from a Rose',
-      artist: 'Seal',
-      date: new Date(1994, 31 , 10),
-      price: 2
-    },
-    {
-      id: 13,
-      title: 'Always',
-      artist: 'Bon Jovi',
-      date: new Date(1994, 31 , 10),
-      price: 3
-    },
-    {
-      id: 14,
-      title: 'Run-Around',
-      artist: 'Blues Traveler',
-      date: new Date(1992, 31 , 10),
-      price: 1
-    },
-    {
-      id: 15,
-      title: 'Waterfalls',
-      artist: 'TLC',
-      date: new Date(1994, 3 , 10),
-      price: 1
-    },
-    {
-      id: 16,
-      title: 'Creep',
-      artist: 'TLC',
-      date: new Date(1994, 3 , 1),
-      price: 1
-    },
-    {
-      id: 17,
-      title: 'Kiss from a Rose',
-      artist: 'Seal',
-      date: new Date(1998, 31 , 10),
-      price: 2
-    },
-    {
-      id: 18,
-      title: 'Always',
-      artist: 'Bon Jovi',
-      date: new Date(1994, 20 , 3),
-      price: 3
-    },
-    {
-      id: 19,
-      title: 'Run-Around',
-      artist: 'Blues Traveler',
-      date: new Date(1994, 5 , 10),
-      price: 1
-    },
-    {
-      id: 20,
-      title: 'Run-Around',
-      artist: 'Blues Traveler',
-      date: new Date(1994, 11 , 10),
-      price: 1
-    }
 
-  ] 
+  albums: Album[] = [];
   max_per_page: number = 10;
   start: number = 0;
   end: number = this.max_per_page;
-  total: number = this.albums.length;
+  total: number = 0;
   delete_form: FormGroup;
   delete: boolean = false;
   all_selected: boolean = false;
-  constructor(
+  form_hide: string = "";
+
+  constructor(private albumServices: AlbumService,
     private fb: FormBuilder, 
     public dialog: MatDialog,
     private modalService: NgbModal) {
     this.delete_form = this.fb.group({
       checkArray: this.fb.array([], [Validators.required]),
     });
+  }
+  ngOnInit(): void {
+    this.albumServices.getAlbums().subscribe((albums: Album[]) => this.albums = albums)
+
+    this.total = this.albums.length;
   }
   checked: string[] = [];
 
@@ -231,25 +93,24 @@ export class AppComponent {
   
   openConfirmDelete(): void {
     if (this.delete_modal_lock == false) {
-      this.delete_modal_lock = true;
       if(this.checked.length > 0){
-        const dialogRef = this.dialog.open(ModalComponent);
-
-        dialogRef.afterClosed().subscribe(result => {
-          if(result == true){
-            this.checked.forEach((item: string) => {
-              if(item != null){
-                var id: number = +item;
-                this.delete_id(id);
-              }
-            });
-            this.delete_form.reset();
-            this.all_selected = false;
-          }
-          this.delete_modal_lock = false;
+        this.delete_modal_lock = true;
+        var result: boolean = true;
+        this.modalService.open(ModalComponent).result.then((data)=>{
+          console.log(data);
         });
+        console.log(result);
+        if(result == true){
+          this.checked.forEach((item: string) => {
+            if(item != null){
+              var id: number = +item;
+              this.delete_id(id);
+            }});
+          this.checked = [];
+          this.all_selected = false;
+        }
+        this.delete_modal_lock = false;
       }
-      
     }  
   }
 
@@ -274,17 +135,16 @@ export class AppComponent {
     this.end = x;
   }
 
-  show_new_form(){
-    this.new_hidden = false;
+  hide_show_form(val: boolean){
+    this.new_hidden = !val;
+    if(val){
+      this.form_hide = "Hide ";
+    }else{
+      this.form_hide = ""
+    }
   }
-
-  hide_new_form(){
-    this.new_hidden = true;
-  }
-
 
   sort(by: string) {
-    this.delete_form.reset();
     this.all_selected = false;
     this.checked = [];
     this.sort_by = by;
@@ -301,20 +161,25 @@ export class AppComponent {
         this.albums.sort((a, b) => a.artist.localeCompare(b.artist))
         break;
       }
-      case "Date":{
+      case "Date(New to Old)":{
+        this.albums.sort((a, b) => ( 0 - new Date(a.date).getTime()) + new Date(b.date).getTime())
+        break;
+      }
+      case "Date(Old to New)":{
         this.albums.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         break;
       }
-      case "Price":{
+      case "Price(Low to High)":{
         this.albums.sort((a, b) => a.price - b.price)
         break;
       }
-      default:{
+      case  "Price(High to Low)":{
+        this.albums.sort((a, b) => (0 - a.price) + b.price)
         break;
       }
     }
   }
-  
+ 
   delete_id(id: number) {
     this.albums.forEach((album,index)=>{
       if(album.id == id) this.albums.splice(index,1);

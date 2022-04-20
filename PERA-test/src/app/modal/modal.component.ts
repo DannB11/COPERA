@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Injectable } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogData } from '../DialogData';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
@@ -8,6 +8,10 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.css']
 })
+
+@Injectable({
+  providedIn: 'root'
+})
 export class ModalComponent {
     closeResult = '';
   
@@ -16,11 +20,21 @@ export class ModalComponent {
   
     open(content: any) {
       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-        this.closeResult = `Closed with: ${result}`;
-      }, (reason) => {
-        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      });
+          return this.closeResult = `Closed with: ${result}`;
+      }, (reason) => {return this.closeResult = `Dismissed ${this.getDismissReason(reason)}`}
+      );
+      this.modalService.activeInstances.subscribe();
     }
+    
+
+
+    done(input: boolean){
+      this.modalService.dismissAll();
+      this.closeResult = input.toString();
+      return input;
+    }
+
+
 
     private getDismissReason(reason: any): string {
       if (reason === ModalDismissReasons.ESC) {

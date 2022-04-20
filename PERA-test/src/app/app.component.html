@@ -33,20 +33,22 @@
       <div>
         
         <input type="hidden" #selection>
-          <form [formGroup]="delete_form">
-          <table class="songTable">
+        <form [formGroup]="delete_form">
+          <div *ngIf="albums">
+            <table class="songTable">
               <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Title</th>
-                <th scope="col">Artist</th>
-                <th scope="col">Release Date</th>
-                <th scope="col">Price</th>
-                <th scope="col">Remove</th>
-                
-              </tr>
-            </thead>
-            <tbody>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Artist</th>
+                  <th scope="col">Release Date</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Remove</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+              
                 <tr *ngFor="let album of albums | slice:start:end; let i = index" >
                   <td class="songTableTD first-child">{{ album.id }}</td>
                   <td class="songTableTD">{{ album.title }}</td>
@@ -67,8 +69,10 @@
                     <input type="checkbox"  name="all" value="all" (change)="select_all()" [checked]="all_selected"/>
                   </td>
                 </tr>
-            </tbody>
-          </table>
+              
+              </tbody>
+            </table>
+          </div>  
         </form>
         <div class="pageBox">
           <div class="pageButtonBox">
@@ -85,13 +89,10 @@
         </div>
         <div class="pageBoxR">
           <div class="entryAddDelBox">
-            <button class="new_entry" (click)="show_new_form()" tabindex="0" [hidden]="!new_hidden">
-              <span>New Entry</span>
+            <button class="new_entry" (click)="hide_show_form(new_hidden)" tabindex="0">
+              <span>{{form_hide}}New Entry</span>
             </button>
-            <button class="new_entry" (click)="hide_new_form()" tabindex="0" [hidden]="new_hidden">
-              <span>Hide New Entry</span>
-            </button>
-            
+                
             <button (click)="openConfirmDelete()" tabindex="0">
               <span>Delete</span>
             </button>
