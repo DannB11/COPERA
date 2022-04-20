@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import {
-    ModalComponent
+    ModalNewEntryComponent
 } from './modal.component';
 
 @NgModule({

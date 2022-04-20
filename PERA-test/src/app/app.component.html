@@ -36,20 +36,19 @@
         <form [formGroup]="delete_form">
           <div *ngIf="albums">
             <table class="songTable">
-              <thead>
+              <thead class="songTableTR">
                 <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Title</th>
-                  <th scope="col">Artist</th>
-                  <th scope="col">Release Date</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Remove</th>
-                  
+                  <th class="songTableTD first-child" scope="col">ID</th>
+                  <th class="songTableTD" scope="col">Title</th>
+                  <th class="songTableTD" scope="col">Artist</th>
+                  <th class="songTableTD" scope="col">Release Date</th>
+                  <th class="songTableTD" scope="col">Price</th>
+                  <th class="songTableTD" scope="col">Remove</th>
                 </tr>
               </thead>
               <tbody>
               
-                <tr *ngFor="let album of albums | slice:start:end; let i = index" >
+                <tr class="songTableTR" *ngFor="let album of albums | slice:start:end; let i = index" >
                   <td class="songTableTD first-child">{{ album.id }}</td>
                   <td class="songTableTD">{{ album.title }}</td>
                   <td class="songTableTD">{{ album.artist }}</td>
@@ -60,64 +59,49 @@
                   </td>
                 </tr>
                 <tr>
-                  <td></td>
-                  <td ></td>
-                  <td ></td>
-                  <td ></td>
-                  <td ></td>
+                  <td colspan="5">
+                    <div class="pageBox">
+                      <p>Displaying {{start+1}}-{{get_true_end()}} of {{total}} entries</p>
+                    </div>
+                    <span class="allLabel">Select All:</span>
+                  </td>
                   <td >
-                    <input type="checkbox"  name="all" value="all" (change)="select_all()" [checked]="all_selected"/>
+                    <input type="checkbox"  name="all" value="all" (change)="selectAllOnPage()" [checked]="all_selected"/>
                   </td>
                 </tr>
-              
               </tbody>
             </table>
           </div>  
         </form>
-        <div class="pageBox">
-          <div class="pageButtonBox">
-            <button class="scroll" (click)="scroll_down()" tabindex="0" [disabled]="!has_less()">
-              <span>Previous</span>
-            </button>
-            <button class="scroll" (click)="scroll_up()" tabindex="0" [disabled]="!has_more()">
-              <span>Next</span>
-            </button>
+        <div class="footer">
+          <div class="pageBox">
+            <div class="pageButtonBox">
+              <button class="scroll" (click)="scroll_down()" tabindex="0" [disabled]="!has_less()">
+                <span>Previous</span>
+              </button>
+              <button class="scroll" (click)="scroll_up()" tabindex="0" [disabled]="!has_more()">
+                <span>Next</span>
+              </button>
+            </div>
           </div>
-          <div class="pageButtonBox">
-            <p>Displaying {{start+1}}-{{get_true_end()}} of {{total}} entries</p>
+          <div class="pageBoxR">
+            <div class="entryAddDelBox">
+              <button class="new_entry" (click)="openNewEntry()" tabindex="0">
+                <span>New Entry</span>
+              </button>
+              <button class="new_entry" (click)="save()" tabindex="0">
+                <span>Save</span>
+              </button>
+              <button class="new_entry" (click)="load(false)" tabindex="0">
+                <span>Load</span>
+              </button>   
+              <button (click)="openConfirmDelete()" tabindex="0">
+                <span>Delete</span>
+              </button>
+            </div>
+            <br />
           </div>
-        </div>
-        <div class="pageBoxR">
-          <div class="entryAddDelBox">
-            <button class="new_entry" (click)="hide_show_form(new_hidden)" tabindex="0">
-              <span>{{form_hide}}New Entry</span>
-            </button>
-                
-            <button (click)="openConfirmDelete()" tabindex="0">
-              <span>Delete</span>
-            </button>
-          </div>
-          <br />
         </div> 
-  
-        
-        
-        <form #FormName = "ngForm" (ngSubmit)="submit_new(FormName)" [hidden]="new_hidden"> 
-          <fieldset class="newEntry">
-              <legend>New Entry</legend>
-              <label>ID<br />
-              <input type="number" name="id" id="id" required = true ngModel/></label><br />
-              <label>Song Title<br />
-              <input type="text" name="title" id="title" ngModel/></label><br />
-              <label>Artist<br />
-              <input type="text" name="artist" id="artist" ngModel/></label><br />
-              <label>Release Date<br />
-              <input type="date" name="date" id="date" ngModel/></label><br />
-              <label>Price<br />
-              <input type="number" name="price" id="price" ngModel/></label><br />
-              <button type="submit">Submit</button>
-          </fieldset>
-        </form>
       </div>
     </div>
   </body>

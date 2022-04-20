@@ -65,24 +65,29 @@ p {
 
 .pageBox{
   width: min-content;
-  padding: auto;
+  padding: min-content;
   margin-left: 0;
   margin-right: auto;
   float: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .pageBoxR{
   width: min-content;
-  padding: auto;
+  padding: min-content;
   margin-left: auto;
   margin-right: 0;
   float: right;
 }
 
 .pageButtonBox{
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   width: max-content;
-  position: static;
-  margin-right: 0;
 }
 
 .entryAddDelBox{
@@ -119,7 +124,8 @@ p {
 }
 
 .frame {
-  width: 450px;
+  width: max-content;
+  min-width: 460px;
   border: 15px solid #84BF41;
   padding: auto;
   margin: auto;
@@ -138,7 +144,13 @@ p {
 }
 
 .songTableTD{
-  border-left: 1px solid #000;
+  border-left: 2px solid #1A2944;
+  max-width: 130px;
+  padding-right: 5px;
+  padding-left: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .songTableTD:first-child{
@@ -146,6 +158,23 @@ p {
 }
 
 
+.songTableTR{
+  border-bottom: 1px dotted #84BF41;
+}
+
+.songTableTR:last-child{
+  border-bottom: none;
+}
+
+.allLabel{
+  width: min-content;
+  margin-right: 0;
+  float: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
 .card-container {
   display: flex;
   flex-wrap: wrap;
@@ -185,9 +214,18 @@ p {
   }
 
 
-footer {
-  margin-top: 8px;
-  display: flex;
+.footer {
+  position: static;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: min-content;
+  display: inside;
   align-items: center;
-  line-height: 20px;
+  justify-items: center;
+  font-weight: 600;
+  border-width: 0;
+  padding: 0;
+  margin: 0;
+  overflow: auto;
 }

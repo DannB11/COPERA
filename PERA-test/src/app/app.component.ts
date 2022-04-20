@@ -8,7 +8,9 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { DialogData } from './DialogData';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalComponent } from './modal/modal.component';
+import { ModalNewEntryComponent } from './modalNewEntry/modal.component';
+import { ModalConfirmComponent } from './modalConfirm/modal.component';
+import { ModalMessageComponent } from './modalMessage/modal.component';
 
 
 @Component({
@@ -21,7 +23,6 @@ export class AppComponent implements OnInit{
   title = 'PERA-test';
   sort_by: string = "ID"
   new_hidden: boolean = true;
-  delete_modal_lock: boolean = false;
   sortOptions: string[] = [ 
     "ID",
     "Title",
@@ -57,9 +58,7 @@ export class AppComponent implements OnInit{
     });
   }
   ngOnInit(): void {
-    this.albumServices.getAlbums().subscribe((albums: Album[]) => this.albums = albums)
-
-    this.total = this.albums.length;
+    this.load(true);
   }
   checked: string[] = [];
 
@@ -76,7 +75,7 @@ export class AppComponent implements OnInit{
     }
   }
 
-  select_all() {
+  selectAllOnPage() {
     if(this.all_selected){
       this.all_selected = false;
       this.checked = [];
@@ -92,15 +91,13 @@ export class AppComponent implements OnInit{
   }
   
   openConfirmDelete(): void {
-    if (this.delete_modal_lock == false) {
-      if(this.checked.length > 0){
-        this.delete_modal_lock = true;
-        var result: boolean = true;
-        this.modalService.open(ModalComponent).result.then((data)=>{
-          console.log(data);
-        });
-        console.log(result);
-        if(result == true){
+    if(this.checked.length > 0){
+      var modRef = this.modalService.open(ModalConfirmComponent);
+      modRef.componentInstance.header = "Confirm Delete"
+      modRef.componentInstance.message = `This will delete ${this.checked.length} record(s)?`
+      modRef.componentInstance.yesButton = "Delete"
+      modRef.result.then((data)=>{
+        if(data == true){
           this.checked.forEach((item: string) => {
             if(item != null){
               var id: number = +item;
@@ -108,10 +105,71 @@ export class AppComponent implements OnInit{
             }});
           this.checked = [];
           this.all_selected = false;
+          if(this.end > this.albums.length){
+            this.scroll_down();
+          }
         }
-        this.delete_modal_lock = false;
-      }
+      });
     }  
+  }
+
+  openNewEntry(): void {
+    this.all_selected = false;
+    this.checked = [];
+    var modRef = this.modalService.open(ModalNewEntryComponent);
+    modRef.result.then((data)=>{
+      if(data){
+        var form: NgForm = data;
+        this.submit_new(form);
+      }
+    });
+  }
+
+  load(init: boolean){
+    this.albumServices.getAlbums().subscribe((albums: Album[]) => {
+      if (albums.length == 0){
+        var modRef = this.modalService.open(ModalConfirmComponent);
+        modRef.componentInstance.header = "Connection Error";
+        modRef.componentInstance.message = "Unable to reach server..";
+        modRef.componentInstance.yesButton = "Try Again";
+        modRef.result.then((data)=>{
+          if(data == true){
+            this.load(init);
+            return;
+          }
+        });
+      }else{
+        this.albums = albums
+        this.total = this.albums.length;
+        this.start = 0;
+        this.end = this.max_per_page;
+      }
+      if (!init){
+        var modRef = this.modalService.open(ModalMessageComponent);
+        modRef.componentInstance.header = "Load Complete";
+        modRef.componentInstance.message = "Your song records have been successfuly loaded.";
+      }
+    });
+  }
+
+  save(){
+    var saveConfirm: boolean = this.albumServices.saveAlbums(this.albums);
+    if (!saveConfirm){
+      var modRef = this.modalService.open(ModalConfirmComponent);
+      modRef.componentInstance.header = "Connection Error";
+      modRef.componentInstance.message = "Unable to reach server..";
+      modRef.componentInstance.yesButton = "Try Again";
+      modRef.result.then((data)=>{
+        if(data == true){
+          this.save();
+          return;
+        }
+      });
+    }else{
+      var modRef = this.modalService.open(ModalMessageComponent);
+      modRef.componentInstance.header = "Save Complete";
+      modRef.componentInstance.message = "Your song records have been successfuly stored in the database.";
+    }
   }
 
   is_checked(x: number){
@@ -129,19 +187,10 @@ export class AppComponent implements OnInit{
     return this.end;
   }
 
-  set_max(x: number){
-    this.max_per_page = x;
+  set_max(songs: number){
+    this.max_per_page = songs;
     this.start = 0;
-    this.end = x;
-  }
-
-  hide_show_form(val: boolean){
-    this.new_hidden = !val;
-    if(val){
-      this.form_hide = "Hide ";
-    }else{
-      this.form_hide = ""
-    }
+    this.end = songs;
   }
 
   sort(by: string) {
@@ -254,12 +303,18 @@ export class AppComponent implements OnInit{
     var found: boolean = false;
     this.albums.forEach(album => {
       if(album.id == form.value.id){
-        console.log(form.value.id);
-        console.log(album.id);
-        console.log("This ID already exists in your playlist");
+        var modRef = this.modalService.open(ModalConfirmComponent);
+        modRef.componentInstance.header = "Entry not added";
+        modRef.componentInstance.message = "This ID already exists in your playlist.";
+        modRef.componentInstance.yesButton = "Try Again";
+        modRef.result.then((data)=>{
+          if(data == true){
+            this.openNewEntry();
+          }
+        });
         found = true;
         return;
-      }
+      } 
     })
     if(!found){
       //Verify all fields are filled

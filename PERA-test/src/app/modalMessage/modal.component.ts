@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject, Injectable } from '@angular/core';
+import { Component, OnInit, Inject, Injectable, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogData } from '../DialogData';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-modal',
@@ -12,10 +12,14 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 @Injectable({
   providedIn: 'root'
 })
-export class ModalComponent {
+export class ModalMessageComponent {
+    @Input() header: string = "";
+    @Input() message: string = "";
+    @Input() buttonText: string = "Ok";
     closeResult = '';
+    
   
-    constructor(public modalService: NgbModal) {
+    constructor(public modalService: NgbModal, public activeModal: NgbActiveModal) {
     }
   
     open(content: any) {
@@ -23,18 +27,12 @@ export class ModalComponent {
           return this.closeResult = `Closed with: ${result}`;
       }, (reason) => {return this.closeResult = `Dismissed ${this.getDismissReason(reason)}`}
       );
-      this.modalService.activeInstances.subscribe();
     }
     
-
-
-    done(input: boolean){
-      this.modalService.dismissAll();
-      this.closeResult = input.toString();
-      return input;
+    done(){
+      this.activeModal.close();
+      return;
     }
-
-
 
     private getDismissReason(reason: any): string {
       if (reason === ModalDismissReasons.ESC) {

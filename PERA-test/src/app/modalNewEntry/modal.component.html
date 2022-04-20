@@ -1,0 +1,20 @@
+<div class="frame">
+  <div class="header"><h1>New Entry</h1></div>
+  <p class="error" [hidden]="errorHidden">*Please fill out all fields</p>
+  <div class="modalBody" BackgroundCssClass="modalBackground" mat-dialog-actions>
+    <form #FormName = "ngForm" (ngSubmit)="submit(FormName)"> 
+      <label><span class="error">{{markers[0]}}</span>ID<br />
+      <input type="number" name="id" id="id" required = true ngModel/></label><br />
+      <label><span class="error">{{markers[1]}}</span>Song Title<br />
+      <input type="text" name="title" id="title" ngModel/></label><br />
+      <label><span class="error">{{markers[2]}}</span>Artist<br />
+      <input type="text" name="artist" id="artist" ngModel/></label><br />
+      <label><span class="error">{{markers[3]}}</span>Release Date<br />
+      <input type="date" name="date" id="date" ngModel/></label><br />
+      <label><span class="error">{{markers[4]}}</span>Price<br />
+      <input type="number" name="price" id="price" ngModel/></label><br />
+      <button (click)="cancel()">Cancel</button>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</div>
