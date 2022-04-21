@@ -1,14 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ModalMessageComponent } from './modal.component';
 
-describe('ModalComponent', () => {
+describe('ModalMessageComponent', () => {
   let component: ModalMessageComponent;
   let fixture: ComponentFixture<ModalMessageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ModalMessageComponent ]
+      declarations: [ ModalMessageComponent],
+      providers: [
+        NgbActiveModal 
+      ]
     })
     .compileComponents();
   });

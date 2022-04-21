@@ -1,14 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ModalNewEntryComponent } from './modal.component';
 
-describe('ModalComponent', () => {
+describe('ModalNewEntryComponent', () => {
   let component: ModalNewEntryComponent;
   let fixture: ComponentFixture<ModalNewEntryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ModalNewEntryComponent ]
+      declarations: [ ModalNewEntryComponent],
+      providers: [
+        NgbActiveModal 
+      ]
     })
     .compileComponents();
   });
@@ -19,7 +23,5 @@ describe('ModalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  
 });

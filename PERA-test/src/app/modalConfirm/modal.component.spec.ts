@@ -1,14 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ModalConfirmComponent } from './modal.component';
 
-describe('ModalComponent', () => {
+describe('ModalConfirmComponent', () => {
   let component: ModalConfirmComponent;
   let fixture: ComponentFixture<ModalConfirmComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ModalConfirmComponent ]
+      declarations: [ ModalConfirmComponent ],
+      providers: [
+        NgbActiveModal 
+      ]
     })
     .compileComponents();
   });

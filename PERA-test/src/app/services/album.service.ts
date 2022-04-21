@@ -13,12 +13,17 @@ export class AlbumService implements IAlbumService{
     constructor(private httpClient: HttpClient) {}
 
     getAlbums() {
-        return this.httpClient.get('api/album') as Observable<Album[]>;
+        return this.httpClient.get('api/album') as Observable<string>;
 
     }
 
-    saveAlbums(albums: Album[]){
-        return false;
-    }
+    saveAlbums(albums: string){
+        var ret: any[] =[
+            {
+              confirmation: false
+            }
+          ]
+          return JSON.stringify(ret);
+        }
 
 }

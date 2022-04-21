@@ -9,11 +9,10 @@ import "@angular/compiler";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
-import { ModalComponentModule } from './modalNewEntry/modal.component.module';
 import { ModalNewEntryComponent } from './modalNewEntry/modal.component';
 import { ModalConfirmComponent } from './modalConfirm/modal.component';
 import { ModalMessageComponent } from './modalMessage/modal.component';
@@ -27,7 +26,6 @@ import { ModalMessageComponent } from './modalMessage/modal.component';
   ],
   imports: [
     FormsModule,
-    MatDialogModule,
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
@@ -37,7 +35,7 @@ import { ModalMessageComponent } from './modalMessage/modal.component';
     NgbModalModule,
     NgbModule
   ],
-  providers: [],
+  providers: [NgbActiveModal],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

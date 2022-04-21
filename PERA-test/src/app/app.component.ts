@@ -4,7 +4,6 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import Album from './Album';
 import { AlbumService } from './services/album.mock.service';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DialogData } from './DialogData';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -48,10 +47,9 @@ export class AppComponent implements OnInit{
   delete: boolean = false;
   all_selected: boolean = false;
   form_hide: string = "";
-
+  checked: string[] = [];
   constructor(private albumServices: AlbumService,
-    private fb: FormBuilder, 
-    public dialog: MatDialog,
+    private fb: FormBuilder,
     private modalService: NgbModal) {
     this.delete_form = this.fb.group({
       checkArray: this.fb.array([], [Validators.required]),
@@ -60,7 +58,12 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     this.load(true);
   }
-  checked: string[] = [];
+  
+
+  uncheckAll(){
+    this.checked = [];
+    this.all_selected = false;
+  }
 
   onCheckboxChange(e: any) {
     this.all_selected = false;
@@ -77,8 +80,7 @@ export class AppComponent implements OnInit{
 
   selectAllOnPage() {
     if(this.all_selected){
-      this.all_selected = false;
-      this.checked = [];
+      this.uncheckAll();
     }
     else{
       this.all_selected = true;
@@ -126,8 +128,11 @@ export class AppComponent implements OnInit{
   }
 
   load(init: boolean){
-    this.albumServices.getAlbums().subscribe((albums: Album[]) => {
-      if (albums.length == 0){
+    this.albumServices.getAlbums().subscribe((inData: string) => {
+      var jsonData: any[] = JSON.parse(inData);
+      var confirm: any = jsonData[0].confirmation;
+      var data: any[] = jsonData[0].data;
+      if(!confirm){
         var modRef = this.modalService.open(ModalConfirmComponent);
         modRef.componentInstance.header = "Connection Error";
         modRef.componentInstance.message = "Unable to reach server..";
@@ -137,24 +142,35 @@ export class AppComponent implements OnInit{
             this.load(init);
             return;
           }
+          return;
         });
       }else{
-        this.albums = albums
+        this.albums = [];
+        data.forEach(element => {
+          var album: Album = new Album(element.id, element.title, element.artist, element.date, element.price)
+          this.albums.push(album);
+        });
+
         this.total = this.albums.length;
         this.start = 0;
         this.end = this.max_per_page;
-      }
-      if (!init){
-        var modRef = this.modalService.open(ModalMessageComponent);
-        modRef.componentInstance.header = "Load Complete";
-        modRef.componentInstance.message = "Your song records have been successfuly loaded.";
+        
+        if (!init){
+          var modRef = this.modalService.open(ModalMessageComponent);
+          modRef.componentInstance.header = "Load Complete";
+          modRef.componentInstance.message = "Your song records have been successfuly loaded.";
+        }
       }
     });
   }
 
   save(){
-    var saveConfirm: boolean = this.albumServices.saveAlbums(this.albums);
-    if (!saveConfirm){
+    this.all_selected = false;
+    this.checked = [];
+    var saveConfirm = this.albumServices.saveAlbums(JSON.stringify(this.albums));
+    var jsonData: any[] = JSON.parse(saveConfirm);
+    var conf: any = jsonData[0].confirmation;
+    if (!conf){
       var modRef = this.modalService.open(ModalConfirmComponent);
       modRef.componentInstance.header = "Connection Error";
       modRef.componentInstance.message = "Unable to reach server..";
@@ -194,8 +210,7 @@ export class AppComponent implements OnInit{
   }
 
   sort(by: string) {
-    this.all_selected = false;
-    this.checked = [];
+    this.uncheckAll();
     this.sort_by = by;
     this.albums.sort((a, b) => a.id - b.id);
     switch(by){
@@ -238,9 +253,7 @@ export class AppComponent implements OnInit{
 
   scroll_down(){
     if (this.start > 0){
-      this.delete_form.reset();
-      this.all_selected = false;
-      this.checked = [];
+      this.uncheckAll();
       this.start = this.start - this.max_per_page;
       this.end = this.end - this.max_per_page;
       if (this.start < 0){
@@ -252,7 +265,7 @@ export class AppComponent implements OnInit{
 
   scroll_up(){
     if(this.end < this.albums.length){
-      this.delete_form.reset();
+      this.uncheckAll();
       this.all_selected = false;
       this.checked = [];
       this.start = this.start + this.max_per_page;

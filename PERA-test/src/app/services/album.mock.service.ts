@@ -2,11 +2,11 @@ import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import Album from '../Album';
 import { IAlbumService } from './album.service.interface';
-
 @Injectable({
     providedIn: 'root'
 })
 export class AlbumService implements IAlbumService{
+
     albums: Album[] = [
         {
           id: 0,
@@ -157,23 +157,47 @@ export class AlbumService implements IAlbumService{
         }
     
       ] 
-
     getAlbums() {
         if (Math.random() * 5 > 1){
-            var clone: Album[] = this.albums.slice(0, this.albums.length)
-            return of(clone);
+            var ret: any[] =[
+              {
+                confirmation: true,
+                data: this.albums.slice(0, this.albums.length)
+              }
+            ]
+            return of(JSON.stringify(ret));
         }
-        var clone: Album[] = this.albums.slice(0, 0)
-        return of(clone);
+        var ret: any[] =[
+          {
+            confirmation: false,
+            data: this.albums.slice(0, 0)
+          }
+        ]
+        return of(JSON.stringify(ret));
         
     }
 
-    saveAlbums(albums: Album[]){
+    saveAlbums(albums: string){
+        this.albums = [];
         if (Math.random() * 5 > 1){
-            this.albums = albums;
-            return true;
+            var tempAlbums: any[] = JSON.parse(albums)[0]
+            tempAlbums.forEach(element => {
+              var album: Album = new Album(element.id, element.title, element.artist, element.date, element.price)
+              this.albums.push(album);
+            });
+            var ret: any[] =[
+              {
+                confirmation: true
+              }
+            ]
+            return JSON.stringify(ret);
         }
-        return false;
+        var ret: any[] =[
+          {
+            confirmation: false
+          }
+        ]
+        return JSON.stringify(ret);
     }
 
 }
