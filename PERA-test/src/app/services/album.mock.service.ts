@@ -180,7 +180,7 @@ export class AlbumService implements IAlbumService{
     saveAlbums(albums: string){
         this.albums = [];
         if (Math.random() * 5 > 1){
-            var tempAlbums: any[] = JSON.parse(albums)[0]
+            var tempAlbums: any[] = JSON.parse(albums);
             tempAlbums.forEach(element => {
               var album: Album = new Album(element.id, element.title, element.artist, element.date, element.price)
               this.albums.push(album);
