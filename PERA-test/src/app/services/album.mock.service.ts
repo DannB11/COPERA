@@ -2,6 +2,7 @@ import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import Album from '../Album';
 import { IAlbumService } from './album.service.interface';
+/** import sinon from "sinon/pkg/sinon-esm"; */
 @Injectable({
     providedIn: 'root'
 })
@@ -158,6 +159,7 @@ export class AlbumService implements IAlbumService{
     
       ] 
     getAlbums() {
+      /** 4/5 chance to "receive data from the server" */
         if (Math.random() * 5 > 1){
             var ret: any[] =[
               {
@@ -167,6 +169,7 @@ export class AlbumService implements IAlbumService{
             ]
             return of(JSON.stringify(ret));
         }
+      /** 1/5 chance to "not receive data from the server" */
         var ret: any[] =[
           {
             confirmation: false,
@@ -179,6 +182,7 @@ export class AlbumService implements IAlbumService{
 
     saveAlbums(albums: string){
         this.albums = [];
+        /** 4/5 chance to "send data from the server" */
         if (Math.random() * 5 > 1){
             var tempAlbums: any[] = JSON.parse(albums);
             tempAlbums.forEach(element => {
@@ -192,6 +196,7 @@ export class AlbumService implements IAlbumService{
             ]
             return JSON.stringify(ret);
         }
+        /** 1/5 chance to "not send data from the server" */
         var ret: any[] =[
           {
             confirmation: false

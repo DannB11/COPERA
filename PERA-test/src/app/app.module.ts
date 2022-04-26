@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ModalNewEntryComponent } from './modalNewEntry/modal.component';
 import { ModalConfirmComponent } from './modalConfirm/modal.component';
 import { ModalMessageComponent } from './modalMessage/modal.component';
+/** import sinon from "sinon/pkg/sinon-esm"; */
 
 @NgModule({
   declarations: [

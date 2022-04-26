@@ -1,7 +1,6 @@
 import { Overlay } from '@angular/cdk/overlay';
 import { TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { applyStyles } from '@popperjs/core';
 import Album from './Album';
@@ -17,7 +16,7 @@ describe('AppComponent', () => {
         AppComponent
       ],
       providers: [
-        FormBuilder, MatDialog, Overlay 
+        FormBuilder, Overlay 
       ]
     }).compileComponents();
   });
@@ -38,10 +37,10 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     app.checked.push("3");
-    app.all_selected = true;
+    app.allSelected = true;
     app.uncheckAll();
     expect(app.checked.length).toEqual(0);
-    expect(app.all_selected).toEqual(false);
+    expect(app.allSelected).toEqual(false);
   });
 
   it('selectAllOnPage', () => {
@@ -51,9 +50,9 @@ describe('AppComponent', () => {
     app.albums = []
     app.albums.push(alb);
     app.total = 1;
-    app.all_selected = false;
+    app.allSelected = false;
     app.selectAllOnPage();
-    expect(app.all_selected).toEqual(true);
+    expect(app.allSelected).toEqual(true);
     expect(app.checked.length).toEqual(1);
   });
 
@@ -61,7 +60,7 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     fixture.detectChanges();
-    app.all_selected = true;
+    app.allSelected = true;
     spyOn(app, 'uncheckAll');
     app.selectAllOnPage();
     expect(app.uncheckAll).toHaveBeenCalledTimes(1);
@@ -71,7 +70,7 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     fixture.detectChanges();
-    app.all_selected = false;
+    app.allSelected = false;
     spyOn(app, 'uncheckAll');
     app.selectAllOnPage();
     expect(app.uncheckAll).toHaveBeenCalledTimes(0);
@@ -81,7 +80,7 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     app.checked.push('3');
-    var found: boolean = app.is_checked(3);
+    var found: boolean = app.isChecked(3);
     expect(found).toEqual(true);
   });
 
@@ -89,18 +88,18 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     app.checked.push('3');
-    var found: boolean = app.is_checked(4);
+    var found: boolean = app.isChecked(4);
     expect(found).toEqual(false);
   });
 
-  it('set_max test', () => {
+  it('setMax test', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    app.max_per_page = 10;
+    app.maxPerPage = 10;
     app.start = 10;
     app.end = 10;
-    app.set_max(100);
-    expect(app.max_per_page).toEqual(100);
+    app.setMax(100);
+    expect(app.maxPerPage).toEqual(100);
     expect(app.start).toEqual(0);
     expect(app.end).toEqual(100);
   });
@@ -111,7 +110,7 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     app.end = 100;
     app.total = 0;
-    expect(app.get_true_end()).toEqual(0);
+    expect(app.getTrueEnd()).toEqual(0);
   });
 
   
@@ -120,7 +119,7 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     app.end = 100;
     app.total = 100;
-    expect(app.get_true_end()).toEqual(100);
+    expect(app.getTrueEnd()).toEqual(100);
   });
 
   it('get_true_end end less than total', () => {
@@ -128,7 +127,7 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     app.end = 0;
     app.total = 100;
-    expect(app.get_true_end()).toEqual(0);
+    expect(app.getTrueEnd()).toEqual(0);
   });
 
   it('sorts by ID', () => {
@@ -217,7 +216,7 @@ describe('AppComponent', () => {
     var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
     var alb2 = new Album(1,'b','b',new Date(1001,2,2), 2);
     app.albums = [alb2, alb1];
-    app.delete_id(1);
+    app.deleteId(1);
     expect(app.albums.length).toEqual(1);
   });
 
@@ -227,7 +226,7 @@ describe('AppComponent', () => {
     var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
     var alb2 = new Album(1,'b','b',new Date(1001,2,2), 2);
     app.albums = [alb2, alb1];
-    app.delete_id(3);
+    app.deleteId(3);
     expect(app.albums.length).toEqual(2);
   });
 
@@ -238,7 +237,7 @@ describe('AppComponent', () => {
     var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
     app.albums = [alb1];
     app.end = 0;
-    expect(app.has_more()).toEqual(true);
+    expect(app.hasMore()).toEqual(true);
   });
 
   it('checks if it has more pages (false)', () => {
@@ -248,21 +247,21 @@ describe('AppComponent', () => {
     var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
     app.albums = [alb1];
     app.end = 10;
-    expect(app.has_more()).toEqual(false);
+    expect(app.hasMore()).toEqual(false);
   });
 
   it('checks if it has less pages (true)', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     app.start = 10;
-    expect(app.has_less()).toEqual(true);
+    expect(app.hasLess()).toEqual(true);
   });
 
   it('checks if it has less pages (false)', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     app.start = 0;
-    expect(app.has_less()).toEqual(false);
+    expect(app.hasLess()).toEqual(false);
   });
 
   it('can scroll up when available', () => {
@@ -273,9 +272,9 @@ describe('AppComponent', () => {
     app.albums = [alb1];
     app.start = 0;
     app.end = 0;
-    app.max_per_page = 100;
+    app.maxPerPage = 100;
     spyOn(app, 'uncheckAll');
-    app.scroll_up();
+    app.scrollUp();
     expect(app.uncheckAll).toHaveBeenCalledTimes(1);
     expect(app.start).toEqual(100);
     expect(app.end).toEqual(100);
@@ -287,9 +286,9 @@ describe('AppComponent', () => {
     app.albums = [];
     app.start = 0;
     app.end = 10;
-    app.max_per_page = 100;
+    app.maxPerPage = 100;
     spyOn(app, 'uncheckAll');
-    app.scroll_up();
+    app.scrollUp();
     expect(app.uncheckAll).toHaveBeenCalledTimes(0);
     expect(app.start).toEqual(0);
     expect(app.end).toEqual(10);
@@ -300,9 +299,9 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     app.start = 10;
     app.end = 10;
-    app.max_per_page = 10;
+    app.maxPerPage = 10;
     spyOn(app, 'uncheckAll');
-    app.scroll_down();
+    app.scrollDown();
     expect(app.uncheckAll).toHaveBeenCalledTimes(1);
     expect(app.start).toEqual(0);
     expect(app.end).toEqual(0);
@@ -314,25 +313,11 @@ describe('AppComponent', () => {
     app.albums = [];
     app.start = 0;
     app.end = 10;
-    app.max_per_page = 10;
+    app.maxPerPage = 10;
     spyOn(app, 'uncheckAll');
-    app.scroll_down();
+    app.scrollDown();
     expect(app.uncheckAll).toHaveBeenCalledTimes(0);
     expect(app.start).toEqual(0);
     expect(app.end).toEqual(10);
   });
-  
-  /**
-  scroll_down(){
-    if (this.start > 0){
-      this.uncheckAll();
-      this.start = this.start - this.max_per_page;
-      this.end = this.end - this.max_per_page;
-      if (this.start < 0){
-        this.start = 0;
-      this.end = this.max_per_page;
-      }
-    }
-  }
-  */
 });

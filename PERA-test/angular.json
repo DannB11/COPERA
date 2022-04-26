@@ -99,9 +99,21 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "PERA-test"
+  "defaultProject": "PERA-test",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }

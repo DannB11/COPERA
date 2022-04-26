@@ -4,7 +4,6 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import Album from './Album';
 import { AlbumService } from './services/album.mock.service';
-import { DialogData } from './DialogData';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalNewEntryComponent } from './modalNewEntry/modal.component';
@@ -20,8 +19,8 @@ import { ModalMessageComponent } from './modalMessage/modal.component';
 export class AppComponent implements OnInit{
   closeDelete: string = "";
   title = 'PERA-test';
-  sort_by: string = "ID"
-  new_hidden: boolean = true;
+  sortBy: string = "ID";
+  
   sortOptions: string[] = [ 
     "ID",
     "Title",
@@ -39,22 +38,22 @@ export class AppComponent implements OnInit{
   ]
 
   albums: Album[] = [];
-  max_per_page: number = 10;
+  maxPerPage: number = 10;
   start: number = 0;
-  end: number = this.max_per_page;
+  end: number = this.maxPerPage;
   total: number = 0;
-  delete_form: FormGroup;
+  deleteForm: FormGroup;
   delete: boolean = false;
-  all_selected: boolean = false;
-  form_hide: string = "";
+  allSelected: boolean = false;
   checked: string[] = [];
   constructor(private albumServices: AlbumService,
     private fb: FormBuilder,
     private modalService: NgbModal) {
-    this.delete_form = this.fb.group({
+    this.deleteForm = this.fb.group({
       checkArray: this.fb.array([], [Validators.required]),
     });
   }
+  
   ngOnInit(): void {
     this.load(true);
   }
@@ -62,11 +61,11 @@ export class AppComponent implements OnInit{
 
   uncheckAll(){
     this.checked = [];
-    this.all_selected = false;
+    this.allSelected = false;
   }
 
   onCheckboxChange(e: any) {
-    this.all_selected = false;
+    this.allSelected = false;
     if (e.target.checked) {
       this.checked.push(e.target.value);
     } else {
@@ -79,13 +78,13 @@ export class AppComponent implements OnInit{
   }
 
   selectAllOnPage() {
-    if(this.all_selected){
+    if(this.allSelected){
       this.uncheckAll();
     }
     else{
-      this.all_selected = true;
+      this.allSelected = true;
       var pointer: number = this.start;
-      while(pointer < this.get_true_end()){
+      while(pointer < this.getTrueEnd()){
         this.checked.push(this.albums[pointer].id.toString());
         pointer++;
       }
@@ -103,12 +102,12 @@ export class AppComponent implements OnInit{
           this.checked.forEach((item: string) => {
             if(item != null){
               var id: number = +item;
-              this.delete_id(id);
+              this.deleteId(id);
             }});
           this.checked = [];
-          this.all_selected = false;
+          this.allSelected = false;
           if(this.end > this.albums.length){
-            this.scroll_down();
+            this.scrollDown();
           }
         }
       });
@@ -116,13 +115,13 @@ export class AppComponent implements OnInit{
   }
 
   openNewEntry(): void {
-    this.all_selected = false;
+    this.allSelected = false;
     this.checked = [];
     var modRef = this.modalService.open(ModalNewEntryComponent);
     modRef.result.then((data)=>{
       if(data){
         var form: NgForm = data;
-        this.submit_new(form);
+        this.submitNew(form);
       }
     });
   }
@@ -153,7 +152,7 @@ export class AppComponent implements OnInit{
 
         this.total = this.albums.length;
         this.start = 0;
-        this.end = this.max_per_page;
+        this.end = this.maxPerPage;
         
         if (!init){
           var modRef = this.modalService.open(ModalMessageComponent);
@@ -165,7 +164,7 @@ export class AppComponent implements OnInit{
   }
 
   save(){
-    this.all_selected = false;
+    this.allSelected = false;
     this.checked = [];
     var saveConfirm = this.albumServices.saveAlbums(JSON.stringify(this.albums));
     var jsonData: any[] = JSON.parse(saveConfirm);
@@ -188,7 +187,7 @@ export class AppComponent implements OnInit{
     }
   }
 
-  is_checked(x: number){
+  isChecked(x: number){
     var y: string = x.toString();
     if(this.checked.indexOf(y) >= 0){
       return true;
@@ -196,22 +195,22 @@ export class AppComponent implements OnInit{
     return false;
   }
 
-  get_true_end(){
+  getTrueEnd(){
     if(this.end > this.total){
       return this.total;
     }
     return this.end;
   }
 
-  set_max(songs: number){
-    this.max_per_page = songs;
+  setMax(songs: number){
+    this.maxPerPage = songs;
     this.start = 0;
     this.end = songs;
   }
 
   sort(by: string) {
     this.uncheckAll();
-    this.sort_by = by;
+    this.sortBy = by;
     this.albums.sort((a, b) => a.id - b.id);
     switch(by){
       case "ID":{
@@ -244,43 +243,43 @@ export class AppComponent implements OnInit{
     }
   }
  
-  delete_id(id: number) {
+  deleteId(id: number) {
     this.albums.forEach((album,index)=>{
       if(album.id == id) this.albums.splice(index,1);
    })
    this.total = this.albums.length;
   }
 
-  scroll_down(){
+  scrollDown(){
     if (this.start > 0){
       this.uncheckAll();
-      this.start = this.start - this.max_per_page;
-      this.end = this.end - this.max_per_page;
+      this.start = this.start - this.maxPerPage;
+      this.end = this.end - this.maxPerPage;
       if (this.start < 0){
         this.start = 0;
-      this.end = this.max_per_page;
+      this.end = this.maxPerPage;
       }
     }
   }
 
-  scroll_up(){
+  scrollUp(){
     if(this.end < this.albums.length){
       this.uncheckAll();
-      this.all_selected = false;
+      this.allSelected = false;
       this.checked = [];
-      this.start = this.start + this.max_per_page;
-      this.end = this.end + this.max_per_page;
+      this.start = this.start + this.maxPerPage;
+      this.end = this.end + this.maxPerPage;
     }
   }
 
-  has_less(){
+  hasLess(){
     if (this.start > 0){
       return true;
     }
     return false;
   }
 
-  has_more(){
+  hasMore(){
     if (this.end < this.albums.length){
       return true;
     }
@@ -291,28 +290,28 @@ export class AppComponent implements OnInit{
     const value: string = event.target.value;
     this.sort(value);
     this.start = 0;
-    this.end = this.max_per_page;
+    this.end = this.maxPerPage;
  }
 
  public onSizeSelected(event: any) {
     const value: string = event.target.value;
     this.checked = [];
-    this.all_selected = false;
+    this.allSelected = false;
     if(value == "All"){
-      this.set_max(this.albums.length);
+      this.setMax(this.albums.length);
     }
     else if(value == "10"){
-      this.set_max(10);
+      this.setMax(10);
     }
     else if(value == "20"){
-      this.set_max(20);
+      this.setMax(20);
     }
     else if(value == "50"){
-      this.set_max(50);
+      this.setMax(50);
     }
   }
 
-  submit_new(form: NgForm) {
+  submitNew(form: NgForm) {
     var found: boolean = false;
     this.albums.forEach(album => {
       if(album.id == form.value.id){
@@ -332,7 +331,7 @@ export class AppComponent implements OnInit{
     if(!found){
       //Verify all fields are filled
       if(form.value.id != "" && form.value.title != "" && form.value.artist != "" && form.value.date != "" && form.value.price != ""){
-        this.all_selected = false;
+        this.allSelected = false;
         this.albums.push(new Album(Math.abs(form.value.id), form.value.title, form.value.artist, new Date(form.value.date), Math.abs(form.value.price)));
         this.total = this.albums.length
         form.resetForm();

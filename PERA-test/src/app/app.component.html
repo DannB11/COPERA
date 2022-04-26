@@ -14,14 +14,14 @@
         <div class="toolbar-right">
           <div class="toolbar-card">
             Sort By:
-            <select class='select-option' [(ngModel)]="sort_by" (change)='onOptionsSelected($event)' >
+            <select class='select-option' [(ngModel)]="sortBy" (change)='onOptionsSelected($event)' >
               <option class='string' *ngFor='let option of sortOptions' [value]="option">{{option}}</option>
             </select>
             <br/>
           </div>
           <div class="toolbar-card">
             Items per page:
-            <select class='select-option' [(ngModel)]="max_per_page" (change)='onSizeSelected($event)' >
+            <select class='select-option' [(ngModel)]="maxPerPage" (change)='onSizeSelected($event)' >
               <option class='string' *ngFor='let size of sizeOptions' [value]="size">{{size}}</option>
             </select>
           </div>
@@ -33,7 +33,7 @@
       <div>
         
         <input type="hidden" #selection>
-        <form [formGroup]="delete_form">
+        <form [formGroup]="deleteForm">
           <div *ngIf="albums">
             <table class="songTable">
               <thead class="songTableTR">
@@ -55,18 +55,18 @@
                   <td class="songTableTD">{{ album.date | date}}</td>
                   <td class="songTableTD">${{ album.price }}</td>
                   <td class="songTableTD">
-                    <input type="checkbox"  [name]="album.id" [value]="album.id" (change)="onCheckboxChange($event)" [checked]="is_checked(album.id)"/>
+                    <input type="checkbox"  [name]="album.id" [value]="album.id" (change)="onCheckboxChange($event)" [checked]="isChecked(album.id)"/>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="5">
                     <div class="pageBox">
-                      <p>Displaying {{start+1}}-{{get_true_end()}} of {{total}} entries</p>
+                      <p>Displaying {{start+1}}-{{getTrueEnd()}} of {{total}} entries</p>
                     </div>
                     <span class="allLabel">Select All:</span>
                   </td>
                   <td >
-                    <input type="checkbox"  name="all" value="all" (change)="selectAllOnPage()" [checked]="all_selected"/>
+                    <input type="checkbox"  name="all" value="all" (change)="selectAllOnPage()" [checked]="allSelected"/>
                   </td>
                 </tr>
               </tbody>
@@ -76,10 +76,10 @@
         <div class="footer">
           <div class="pageBox">
             <div class="pageButtonBox">
-              <button class="scroll" (click)="scroll_down()" tabindex="0" [disabled]="!has_less()">
+              <button class="scroll" (click)="scrollDown()" tabindex="0" [disabled]="!hasLess()">
                 <span>Previous</span>
               </button>
-              <button class="scroll" (click)="scroll_up()" tabindex="0" [disabled]="!has_more()">
+              <button class="scroll" (click)="scrollUp()" tabindex="0" [disabled]="!hasMore()">
                 <span>Next</span>
               </button>
             </div>

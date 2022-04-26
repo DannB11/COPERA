@@ -1,8 +1,11 @@
 <div class="frame">
-  <h1>{{header}}</h1>
-  <p>{{message}}</p>
-  <div class="modalBody" BackgroundCssClass="modalBackground" mat-dialog-actions>
-    <button (click)="done(false)">{{noButton}}</button>
-    <button (click)="done(true)" cdkFocusInitial>{{yesButton}}</button>
-  </div>
+  <head>{{header}}</head>
+  <body>
+    <div class="header"><h1>{{header}}</h1></div>
+    <p>{{message}}</p>
+    <div class="modalBody" BackgroundCssClass="modalBackground" mat-dialog-actions>
+      <button class="cancel" (click)="done(false)">{{noButton}}</button>
+      <button class="okay" (click)="done(true)" cdkFocusInitial>{{yesButton}}</button>
+    </div>
+  </body>
 </div>

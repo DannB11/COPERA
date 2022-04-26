@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, Injectable, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { DialogData } from '../DialogData';
 import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
