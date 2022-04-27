@@ -174,7 +174,7 @@ export class AppComponent implements OnInit{
     console.log(id);
     this.allSelected = false;
     this.checked = [];
-    var modRef = this.modalService.open(ModalNewEntryComponent);
+  
     var foundSong: Song = new Song(0, "null", "null", new Date(), 0);
     var count: number = 0;
     var songIndex: number = -1;
@@ -195,7 +195,8 @@ export class AppComponent implements OnInit{
       day = "0" + day;
     }
     var dateString: string = year + "-" + month + "-" + day;
-    console.log(dateString);
+    var modRef = this.modalService.open(ModalNewEntryComponent);
+    modRef.componentInstance.header = "Edit Entry";
     modRef.componentInstance.id = foundSong.id;
     modRef.componentInstance.name = foundSong.title;
     modRef.componentInstance.artist = foundSong.artist;

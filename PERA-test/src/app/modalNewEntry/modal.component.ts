@@ -14,6 +14,7 @@ import { NONE_TYPE } from '@angular/compiler';
   providedIn: 'root'
 })
 export class ModalNewEntryComponent {
+    @Input() header: string = "New Entry";
     @Input() values: number = 0;
     errorHidden: boolean = true;
     markers: string[] = ['','','','','']
