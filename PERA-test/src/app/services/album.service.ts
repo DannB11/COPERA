@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import Song from '../Song';
+import Song from '../Album';
 import { IAlbumService } from './album.service.interface';
 
 @Injectable({

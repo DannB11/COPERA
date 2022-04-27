@@ -2,7 +2,7 @@ import { identifierName } from '@angular/compiler';
 import { AbstractJsEmitterVisitor } from '@angular/compiler/src/output/abstract_js_emitter';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import Song from './Song';
+import Song from './Album';
 import { AlbumService } from './services/album.mock.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -165,6 +165,70 @@ export class AppComponent implements OnInit{
           var modRef = this.modalService.open(ModalMessageComponent);
           modRef.componentInstance.header = "Load Complete";
           modRef.componentInstance.message = "Your song records have been successfuly loaded.";
+        }
+      }
+    });
+  }
+
+  edit(id: number){
+    console.log(id);
+    this.allSelected = false;
+    this.checked = [];
+    var modRef = this.modalService.open(ModalNewEntryComponent);
+    var foundSong: Song = new Song(0, "null", "null", new Date(), 0);
+    var count: number = 0;
+    var songIndex: number = -1;
+    this.albums.forEach((song) =>{
+      if (song.id == id){
+        foundSong = song;
+        songIndex = count;
+      }
+      count++;
+    })
+    var year: string = new Date(foundSong.date).getFullYear().toString();
+    var month: string = (new Date(foundSong.date).getMonth() + 1).toString();
+    if (month.length == 1){
+      month = "0" + month;
+    }
+    var day: string = new Date(foundSong.date).getDate().toString();
+    if (day.length == 1){
+      day = "0" + day;
+    }
+    var dateString: string = year + "-" + month + "-" + day;
+    console.log(dateString);
+    modRef.componentInstance.id = foundSong.id;
+    modRef.componentInstance.name = foundSong.title;
+    modRef.componentInstance.artist = foundSong.artist;
+    modRef.componentInstance.releaseDate = dateString;
+    modRef.componentInstance.price = foundSong.price;
+    
+    modRef.result.then((data)=>{
+      if(data){
+        var form: NgForm = data;
+        var found: boolean = false;
+        this.albums.forEach(album => {
+          if(album.id == form.value.id && form.value.id != id){
+            found = true;
+            var modRef = this.modalService.open(ModalConfirmComponent);
+            modRef.componentInstance.header = "Entry not added";
+            modRef.componentInstance.message = "This ID already exists in your playlist.";
+            modRef.componentInstance.yesButton = "Try Again";
+            modRef.result.then((data)=>{
+              if(data == true){
+                this.edit(id);
+                return;
+              }
+            });
+          }
+        });
+        if(!found){
+          var foundSong: Song = this.albums[songIndex];
+          foundSong.id = form.value.id;
+          foundSong.title = form.value.title;
+          foundSong.artist = form.value.artist;
+          var date: Date = new Date(form.value.date)
+          foundSong.date = new Date(date.setDate(date.getDate() + 1));
+          foundSong.price = form.value.price;
         }
       }
     });

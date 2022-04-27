@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { applyStyles } from '@popperjs/core';
-import Song from './Song';
+import Song from './Album';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {

@@ -43,6 +43,7 @@
                   <th class="songTableTD" scope="col">Artist</th>
                   <th class="songTableTD" scope="col">Release Date</th>
                   <th class="songTableTD" scope="col">Price</th>
+                  <th class="songTableTD" scope="col">Edit</th>
                   <th class="songTableTD" scope="col">Remove</th>
                 </tr>
               </thead>
@@ -54,12 +55,15 @@
                   <td class="songTableTD">{{ album.artist }}</td>
                   <td class="songTableTD">{{ album.date | date}}</td>
                   <td class="songTableTD">${{ album.price }}</td>
+                  <td class="songTableTD"><button class="new_entry" (click)="edit(album.id)" tabindex="0">
+                    <span>Edit</span>
+                  </button></td>
                   <td class="songTableTD">
                     <input type="checkbox"  [name]="album.id" [value]="album.id" (change)="onCheckboxChange($event)" [checked]="isChecked(album.id)"/>
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="5">
+                  <td colspan="6">
                     <div class="pageBox">
                       <p>Displaying {{start+1}}-{{getEndOfPage()}} of {{total}} entries</p>
                     </div>

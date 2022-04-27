@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import Song from "../Song";
+import Song from "../Album";
 
 export interface IAlbumService{
     getSongs(): Observable<string>;

@@ -7,15 +7,15 @@
     <div class="modalBody" BackgroundCssClass="modalBackground" mat-dialog-actions>
       <form #FormName = "ngForm" (ngSubmit)="submit(FormName)"> 
         <label><span class="error">{{markers[0]}}</span>ID<br />
-        <input class="idField" type="number" name="id" id="id" required = true ngModel/></label><br />
+        <input class="idField" type="number" name="id" id="id" required = true [(ngModel)]="id"/></label><br />
         <label><span class="error">{{markers[1]}}</span>Song Title<br />
-        <input class="titleField" type="text" name="title" id="title" ngModel/></label><br />
+        <input class="titleField" type="text" name="title" id="title" [(ngModel)]="name"/></label><br />
         <label><span class="error">{{markers[2]}}</span>Artist<br />
-        <input class="artistField" type="text" name="artist" id="artist" ngModel/></label><br />
+        <input class="artistField" type="text" name="artist" id="artist" [(ngModel)]="artist"/></label><br />
         <label><span class="error">{{markers[3]}}</span>Release Date<br />
-        <input class="dateField" type="date" name="date" id="date" ngModel/></label><br />
+        <input class="dateField" type="date" name="date" id="date" [(ngModel)]="releaseDate"/></label><br />
         <label><span class="error">{{markers[4]}}</span>Price<br />
-        <input class="" type="number" name="price" id="price" ngModel/></label><br />
+        <input class="" type="number" name="price" id="price" [(ngModel)]="price"/></label><br />
         <button class="cancel" (click)="cancel()">Cancel</button>
         <button class="submit" type="submit">Submit</button>
       </form>

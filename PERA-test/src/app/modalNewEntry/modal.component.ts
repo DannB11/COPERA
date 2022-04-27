@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, Injectable, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { NgForm } from '@angular/forms';
+import { NONE_TYPE } from '@angular/compiler';
 
 @Component({
   selector: 'app-modal',
@@ -17,6 +18,11 @@ export class ModalNewEntryComponent {
     errorHidden: boolean = true;
     markers: string[] = ['','','','','']
     closeResult = '';
+    @Input() id: string = "";
+    @Input() name: string = "";
+    @Input() artist: string = "";
+    @Input() releaseDate: string = "";
+    @Input() price: string = "";
     
   
     constructor(public modalService: NgbModal, public activeModal: NgbActiveModal) {
@@ -33,7 +39,7 @@ export class ModalNewEntryComponent {
       this.errorHidden = true;
       this.markers = ['','','','','']
       // show error message and * markers if any field is left blank
-      if(form.value.id == ""){
+      if(form.value.id.length == 0){
         this.errorHidden = false;
         this.markers[0] = "*";
       }if(form.value.title == ""){
