@@ -1,23 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import Album from '../Album';
+import Song from '../Song';
 import { IAlbumService } from './album.service.interface';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AlbumService implements IAlbumService{
-    albums: Album[] = [];
+    // real database not yet implimented
+    albums: Song[] = [];
 
     constructor(private httpClient: HttpClient) {}
 
-    getAlbums() {
+    getSongs() {
         return this.httpClient.get('api/album') as Observable<string>;
 
     }
 
-    saveAlbums(albums: string){
+    saveSongs(albums: string){
         var ret: any[] =[
             {
               confirmation: false

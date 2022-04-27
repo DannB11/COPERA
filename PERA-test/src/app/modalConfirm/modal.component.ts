@@ -31,6 +31,7 @@ export class ModalConfirmComponent {
     }
     
     done(input: boolean){
+    // close modal and return a boolean based on which button is clicked
       this.activeModal.close(input);
       return;
     }

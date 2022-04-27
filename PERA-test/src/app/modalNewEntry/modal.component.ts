@@ -32,6 +32,7 @@ export class ModalNewEntryComponent {
     submit(form: NgForm){
       this.errorHidden = true;
       this.markers = ['','','','','']
+      // show error message and * markers if any field is left blank
       if(form.value.id == ""){
         this.errorHidden = false;
         this.markers[0] = "*";
@@ -54,6 +55,7 @@ export class ModalNewEntryComponent {
     }
 
     cancel(){
+    // close without submitting a new entry
       this.activeModal.close();
       return;
     }

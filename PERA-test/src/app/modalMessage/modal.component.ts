@@ -29,6 +29,7 @@ export class ModalMessageComponent {
     }
     
     done(){
+    // closes modal without returning any data
       this.activeModal.close();
       return;
     }

@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
-import Album from '../Album';
+import Song from '../Song';
 import { IAlbumService } from './album.service.interface';
 /** import sinon from "sinon/pkg/sinon-esm"; */
 @Injectable({
@@ -8,7 +8,7 @@ import { IAlbumService } from './album.service.interface';
 })
 export class AlbumService implements IAlbumService{
 
-    albums: Album[] = [
+    albums: Song[] = [
         {
           id: 0,
           title: 'Waterfalls',
@@ -158,8 +158,9 @@ export class AlbumService implements IAlbumService{
         }
     
       ] 
-    getAlbums() {
-      /** 4/5 chance to "receive data from the server" */
+    getSongs() {
+    // Returns all songs in the database
+      // 4/5 chance to "receive data from the server"
         if (Math.random() * 5 > 1){
             var ret: any[] =[
               {
@@ -180,13 +181,14 @@ export class AlbumService implements IAlbumService{
         
     }
 
-    saveAlbums(albums: string){
+    saveSongs(albums: string){
+    // saves songs to the "database"
         this.albums = [];
-        /** 4/5 chance to "send data from the server" */
+        // 4/5 chance to "send data from the server"
         if (Math.random() * 5 > 1){
             var tempAlbums: any[] = JSON.parse(albums);
             tempAlbums.forEach(element => {
-              var album: Album = new Album(element.id, element.title, element.artist, element.date, element.price)
+              var album: Song = new Song(element.id, element.title, element.artist, element.date, element.price)
               this.albums.push(album);
             });
             var ret: any[] =[

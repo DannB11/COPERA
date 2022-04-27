@@ -2,7 +2,7 @@ import { identifierName } from '@angular/compiler';
 import { AbstractJsEmitterVisitor } from '@angular/compiler/src/output/abstract_js_emitter';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import Album from './Album';
+import Song from './Song';
 import { AlbumService } from './services/album.mock.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -37,7 +37,7 @@ export class AppComponent implements OnInit{
     "All"
   ]
 
-  albums: Album[] = [];
+  albums: Song[] = [];
   maxPerPage: number = 10;
   start: number = 0;
   end: number = this.maxPerPage;
@@ -60,11 +60,13 @@ export class AppComponent implements OnInit{
   
 
   uncheckAll(){
+  // Sets all check boxes and the select all checkbox to unselected
     this.checked = [];
     this.allSelected = false;
   }
 
   onCheckboxChange(e: any) {
+  // stores the value of any checkbox changes
     this.allSelected = false;
     if (e.target.checked) {
       this.checked.push(e.target.value);
@@ -78,13 +80,14 @@ export class AppComponent implements OnInit{
   }
 
   selectAllOnPage() {
+  // selects all check boxes currently being displayed
     if(this.allSelected){
       this.uncheckAll();
     }
     else{
       this.allSelected = true;
       var pointer: number = this.start;
-      while(pointer < this.getTrueEnd()){
+      while(pointer < this.getEndOfPage()){
         this.checked.push(this.albums[pointer].id.toString());
         pointer++;
       }
@@ -92,6 +95,7 @@ export class AppComponent implements OnInit{
   }
   
   openConfirmDelete(): void {
+  // opens a modal to confirm the deletion
     if(this.checked.length > 0){
       var modRef = this.modalService.open(ModalConfirmComponent);
       modRef.componentInstance.header = "Confirm Delete"
@@ -115,6 +119,7 @@ export class AppComponent implements OnInit{
   }
 
   openNewEntry(): void {
+  // opens a modal for entering new entries
     this.allSelected = false;
     this.checked = [];
     var modRef = this.modalService.open(ModalNewEntryComponent);
@@ -127,10 +132,12 @@ export class AppComponent implements OnInit{
   }
 
   load(init: boolean){
-    this.albumServices.getAlbums().subscribe((inData: string) => {
+  // loads the JSON of songs from the database
+    this.albumServices.getSongs().subscribe((inData: string) => {
       var jsonData: any[] = JSON.parse(inData);
       var confirm: any = jsonData[0].confirmation;
       var data: any[] = jsonData[0].data;
+      // if confirmation message is set to false, database connnection failed, launch modal to alert user
       if(!confirm){
         var modRef = this.modalService.open(ModalConfirmComponent);
         modRef.componentInstance.header = "Connection Error";
@@ -146,14 +153,14 @@ export class AppComponent implements OnInit{
       }else{
         this.albums = [];
         data.forEach(element => {
-          var album: Album = new Album(element.id, element.title, element.artist, element.date, element.price)
+          var album: Song = new Song(element.id, element.title, element.artist, element.date, element.price)
           this.albums.push(album);
         });
 
         this.total = this.albums.length;
         this.start = 0;
         this.end = this.maxPerPage;
-        
+        // open modal to alert user their load was successful if this is not during the initial load of the program  
         if (!init){
           var modRef = this.modalService.open(ModalMessageComponent);
           modRef.componentInstance.header = "Load Complete";
@@ -164,11 +171,13 @@ export class AppComponent implements OnInit{
   }
 
   save(){
+  // saves the JSON of songs from the database
     this.allSelected = false;
     this.checked = [];
-    var saveConfirm = this.albumServices.saveAlbums(JSON.stringify(this.albums));
+    var saveConfirm = this.albumServices.saveSongs(JSON.stringify(this.albums));
     var jsonData: any[] = JSON.parse(saveConfirm);
     var conf: any = jsonData[0].confirmation;
+    // if confirmation message is set to false, database connnection failed, launch modal to alert user
     if (!conf){
       var modRef = this.modalService.open(ModalConfirmComponent);
       modRef.componentInstance.header = "Connection Error";
@@ -187,15 +196,17 @@ export class AppComponent implements OnInit{
     }
   }
 
-  isChecked(x: number){
-    var y: string = x.toString();
+  isChecked(id: number){
+  // checks if the checkbox assigned to a song id is currently active
+    var y: string = id.toString();
     if(this.checked.indexOf(y) >= 0){
       return true;
     }
     return false;
   }
 
-  getTrueEnd(){
+  getEndOfPage(){
+  // returns the index of the last item displayed on the current page
     if(this.end > this.total){
       return this.total;
     }
@@ -203,12 +214,14 @@ export class AppComponent implements OnInit{
   }
 
   setMax(songs: number){
+  // set the max number of songs that should be displayed per page
     this.maxPerPage = songs;
     this.start = 0;
     this.end = songs;
   }
 
   sort(by: string) {
+  // sorts all songs loaded by any column
     this.uncheckAll();
     this.sortBy = by;
     this.albums.sort((a, b) => a.id - b.id);
@@ -244,6 +257,7 @@ export class AppComponent implements OnInit{
   }
  
   deleteId(id: number) {
+  // removes a song with the given id
     this.albums.forEach((album,index)=>{
       if(album.id == id) this.albums.splice(index,1);
    })
@@ -251,6 +265,7 @@ export class AppComponent implements OnInit{
   }
 
   scrollDown(){
+  // goes back 1 page
     if (this.start > 0){
       this.uncheckAll();
       this.start = this.start - this.maxPerPage;
@@ -263,6 +278,7 @@ export class AppComponent implements OnInit{
   }
 
   scrollUp(){
+  // goes forward 1 page
     if(this.end < this.albums.length){
       this.uncheckAll();
       this.allSelected = false;
@@ -273,6 +289,7 @@ export class AppComponent implements OnInit{
   }
 
   hasLess(){
+  // checks if there are pages accessable before current page
     if (this.start > 0){
       return true;
     }
@@ -280,6 +297,7 @@ export class AppComponent implements OnInit{
   }
 
   hasMore(){
+  // checks if there are pages accessable after current page
     if (this.end < this.albums.length){
       return true;
     }
@@ -287,6 +305,7 @@ export class AppComponent implements OnInit{
   }
 
   public onOptionsSelected(event: any) {
+  // listens for a change in the sort by select menu
     const value: string = event.target.value;
     this.sort(value);
     this.start = 0;
@@ -294,6 +313,7 @@ export class AppComponent implements OnInit{
  }
 
  public onSizeSelected(event: any) {
+  // listens for a change in the page size select menu
     const value: string = event.target.value;
     this.checked = [];
     this.allSelected = false;
@@ -312,7 +332,9 @@ export class AppComponent implements OnInit{
   }
 
   submitNew(form: NgForm) {
+  // attempts to insert a new song into the local dataset
     var found: boolean = false;
+    // launch modal if entry ID already exsists
     this.albums.forEach(album => {
       if(album.id == form.value.id){
         var modRef = this.modalService.open(ModalConfirmComponent);
@@ -332,7 +354,7 @@ export class AppComponent implements OnInit{
       //Verify all fields are filled
       if(form.value.id != "" && form.value.title != "" && form.value.artist != "" && form.value.date != "" && form.value.price != ""){
         this.allSelected = false;
-        this.albums.push(new Album(Math.abs(form.value.id), form.value.title, form.value.artist, new Date(form.value.date), Math.abs(form.value.price)));
+        this.albums.push(new Song(Math.abs(form.value.id), form.value.title, form.value.artist, new Date(form.value.date), Math.abs(form.value.price)));
         this.total = this.albums.length
         form.resetForm();
       }

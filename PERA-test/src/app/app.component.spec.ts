@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { applyStyles } from '@popperjs/core';
-import Album from './Album';
+import Song from './Song';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
@@ -46,7 +46,7 @@ describe('AppComponent', () => {
   it('selectAllOnPage', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    var alb: Album = new Album(1,'a','a',new Date(1000,1,1), 4);
+    var alb: Song = new Song(1,'a','a',new Date(1000,1,1), 4);
     app.albums = []
     app.albums.push(alb);
     app.total = 1;
@@ -110,7 +110,7 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     app.end = 100;
     app.total = 0;
-    expect(app.getTrueEnd()).toEqual(0);
+    expect(app.getEndOfPage()).toEqual(0);
   });
 
   
@@ -119,7 +119,7 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     app.end = 100;
     app.total = 100;
-    expect(app.getTrueEnd()).toEqual(100);
+    expect(app.getEndOfPage()).toEqual(100);
   });
 
   it('get_true_end end less than total', () => {
@@ -127,14 +127,14 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     app.end = 0;
     app.total = 100;
-    expect(app.getTrueEnd()).toEqual(0);
+    expect(app.getEndOfPage()).toEqual(0);
   });
 
   it('sorts by ID', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    var alb1 = new Album(1,'a','a',new Date(1000,1,1), 1);
-    var alb2 = new Album(2,'b','b',new Date(1001,2,2), 2);
+    var alb1 = new Song(1,'a','a',new Date(1000,1,1), 1);
+    var alb2 = new Song(2,'b','b',new Date(1001,2,2), 2);
     app.albums = [alb2, alb1];
     app.sort("ID");
     var front = app.albums[0]
@@ -145,8 +145,8 @@ describe('AppComponent', () => {
   it('sorts by Title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
-    var alb2 = new Album(1,'b','b',new Date(1001,2,2), 2);
+    var alb1 = new Song(2,'a','a',new Date(1000,1,1), 1);
+    var alb2 = new Song(1,'b','b',new Date(1001,2,2), 2);
     app.albums = [alb2, alb1];
     app.sort("Title");
     var front = app.albums[0]
@@ -157,8 +157,8 @@ describe('AppComponent', () => {
   it('sorts by Artist', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
-    var alb2 = new Album(1,'b','b',new Date(1001,2,2), 2);
+    var alb1 = new Song(2,'a','a',new Date(1000,1,1), 1);
+    var alb2 = new Song(1,'b','b',new Date(1001,2,2), 2);
     app.albums = [alb2, alb1];
     app.sort("Artist");
     var front = app.albums[0]
@@ -169,8 +169,8 @@ describe('AppComponent', () => {
   it('sorts by Date(New to Old)', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
-    var alb2 = new Album(1,'b','b',new Date(1001,2,2), 2);
+    var alb1 = new Song(2,'a','a',new Date(1000,1,1), 1);
+    var alb2 = new Song(1,'b','b',new Date(1001,2,2), 2);
     app.albums = [alb2, alb1];
     app.sort("Date(New to Old)");
     var front = app.albums[0]
@@ -180,8 +180,8 @@ describe('AppComponent', () => {
   it('sorts by Date(Old to New)', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
-    var alb2 = new Album(1,'b','b',new Date(1001,2,2), 2);
+    var alb1 = new Song(2,'a','a',new Date(1000,1,1), 1);
+    var alb2 = new Song(1,'b','b',new Date(1001,2,2), 2);
     app.albums = [alb2, alb1];
     app.sort("Date(Old to New)");
     var front = app.albums[0]
@@ -191,8 +191,8 @@ describe('AppComponent', () => {
   it('sorts by Price(Low to High)', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
-    var alb2 = new Album(1,'b','b',new Date(1001,2,2), 2);
+    var alb1 = new Song(2,'a','a',new Date(1000,1,1), 1);
+    var alb2 = new Song(1,'b','b',new Date(1001,2,2), 2);
     app.albums = [alb2, alb1];
     app.sort("Price(Low to High)");
     var front = app.albums[0]
@@ -202,8 +202,8 @@ describe('AppComponent', () => {
   it('sorts by Price(High to Low)', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
-    var alb2 = new Album(1,'b','b',new Date(1001,2,2), 2);
+    var alb1 = new Song(2,'a','a',new Date(1000,1,1), 1);
+    var alb2 = new Song(1,'b','b',new Date(1001,2,2), 2);
     app.albums = [alb2, alb1];
     app.sort("Price(High to Low)");
     var front = app.albums[0]
@@ -213,8 +213,8 @@ describe('AppComponent', () => {
   it('deletes the correct entry', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
-    var alb2 = new Album(1,'b','b',new Date(1001,2,2), 2);
+    var alb1 = new Song(2,'a','a',new Date(1000,1,1), 1);
+    var alb2 = new Song(1,'b','b',new Date(1001,2,2), 2);
     app.albums = [alb2, alb1];
     app.deleteId(1);
     expect(app.albums.length).toEqual(1);
@@ -223,8 +223,8 @@ describe('AppComponent', () => {
   it('doesnt delete if it doesnt find a match ', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
-    var alb2 = new Album(1,'b','b',new Date(1001,2,2), 2);
+    var alb1 = new Song(2,'a','a',new Date(1000,1,1), 1);
+    var alb2 = new Song(1,'b','b',new Date(1001,2,2), 2);
     app.albums = [alb2, alb1];
     app.deleteId(3);
     expect(app.albums.length).toEqual(2);
@@ -234,7 +234,7 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     app.albums = [];
-    var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
+    var alb1 = new Song(2,'a','a',new Date(1000,1,1), 1);
     app.albums = [alb1];
     app.end = 0;
     expect(app.hasMore()).toEqual(true);
@@ -244,7 +244,7 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     app.albums = [];
-    var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
+    var alb1 = new Song(2,'a','a',new Date(1000,1,1), 1);
     app.albums = [alb1];
     app.end = 10;
     expect(app.hasMore()).toEqual(false);
@@ -268,7 +268,7 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     app.albums = [];
-    var alb1 = new Album(2,'a','a',new Date(1000,1,1), 1);
+    var alb1 = new Song(2,'a','a',new Date(1000,1,1), 1);
     app.albums = [alb1];
     app.start = 0;
     app.end = 0;
