@@ -208,7 +208,7 @@ export class AppComponent implements OnInit{
         var form: NgForm = data;
         var found: boolean = false;
         this.albums.forEach(album => {
-          if(album.id == form.value.id && form.value.id != id){
+          if(album.id == Math.abs(form.value.id) && Math.abs(form.value.id) != id){
             found = true;
             var modRef = this.modalService.open(ModalConfirmComponent);
             modRef.componentInstance.header = "Entry not added";
@@ -224,12 +224,12 @@ export class AppComponent implements OnInit{
         });
         if(!found){
           var foundSong: Song = this.albums[songIndex];
-          foundSong.id = form.value.id;
+          foundSong.id = Math.abs(form.value.id);
           foundSong.title = form.value.title;
           foundSong.artist = form.value.artist;
           var date: Date = new Date(form.value.date)
           foundSong.date = new Date(date.setDate(date.getDate() + 1));
-          foundSong.price = form.value.price;
+          foundSong.price = Math.abs(form.value.price);
         }
       }
     });
