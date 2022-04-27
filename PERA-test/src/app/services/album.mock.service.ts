@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import Song from '../Song';
 import { IAlbumService } from './album.service.interface';
-/** import sinon from "sinon/pkg/sinon-esm"; */
+
 @Injectable({
     providedIn: 'root'
 })
