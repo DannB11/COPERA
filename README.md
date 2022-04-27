@@ -18,4 +18,5 @@ I did not use the sinon.js library as I was not sure if this would work in an an
 
 As far as styling goes, I decided to keep the page as simple as possible since it is my first webpage build.
 A style choice I did make though was the bold blue column lines with the dotted light green row lines. I wanted the data to be easily readable while not looking like an excel spreadsheet.
+I dislike the layout of where the edit buttons are located but the functionality works as intended.
 
