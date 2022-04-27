@@ -171,7 +171,7 @@ export class AppComponent implements OnInit{
   }
 
   edit(id: number){
-    console.log(id);
+    // opens a modal to allow the editing of the selected entry
     this.allSelected = false;
     this.checked = [];
   

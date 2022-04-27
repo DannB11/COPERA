@@ -39,20 +39,29 @@ export class ModalNewEntryComponent {
     submit(form: NgForm){
       this.errorHidden = true;
       this.markers = ['','','','','']
-      // show error message and * markers if any field is left blank
-      if(form.value.id.length == 0){
+      // show error message and * markers if any field is left blank (strange formatting due to 0 == null, cant call length on none type)
+      if(form.value.id == null){
         this.errorHidden = false;
         this.markers[0] = "*";
-      }if(form.value.title == ""){
+      }
+      else if(form.value.id.length == 0){
+        this.errorHidden = false;
+        this.markers[0] = "*";
+      }if(form.value.title == "" || form.value.title == null){
         this.errorHidden = false;
         this.markers[1] = "*";
-      }if(form.value.artist == ""){
+      }if(form.value.artist == "" || form.value.artist == null){
         this.errorHidden = false;
         this.markers[2] = "*";
-      }if(form.value.date == ""){
+      }if(form.value.date == "" || form.value.date == null){
         this.errorHidden = false;
         this.markers[3] = "*";
-      }if(form.value.price == ""){
+      }
+      if(form.value.price == null){
+        this.errorHidden = false;
+        this.markers[4] = "*";
+      }
+      else if(form.value.price.length == 0){
         this.errorHidden = false;
         this.markers[4] = "*";
       }if(this.errorHidden){
